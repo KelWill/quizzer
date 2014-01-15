@@ -29,6 +29,12 @@
   top: 40%;
   margin: auto;
 }
+.counts {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: lightgrey;
+}
 .save {
   position: absolute;
   top: 550px;

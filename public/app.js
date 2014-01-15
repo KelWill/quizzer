@@ -83,12 +83,12 @@ var QuestionSetView = Backbone.View.extend({
     var questionView = this.questions[this.currentCount];
     //adding it if it hasn't been added
     if (!questionView.dontKnow) {
-      this.tostudy.push(this.questions[this.currentCount]);
+      this.tostudy.push(this.questions[this.currentCount].model);
       questionView.dontKnow = true;
     }
     if (questionView.showingAnswer) this.nextQuestion();
     else (this.showAnswer());
-},
+  },
   save: function(){
     var savedQuestions = new SavedQuestions({questions: this.tostudy});
     $('.container').append(savedQuestions.el);
@@ -96,7 +96,7 @@ var QuestionSetView = Backbone.View.extend({
   tostudy: [],
   questions: [],
   currentCount: 0,
-  template: _.template('<div class = "counts"><span class = "countDone"></span><span class = "countTotal"></span></div>' +
+  template: _.template('<div class = "counts"><span class = "countDone"></span> / <span class = "countTotal"></span></div>' +
                        '<div class = "currentQuestion"></div><div class = "buttons">' +
                        '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>' +
                        '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>' +
