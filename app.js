@@ -11,40 +11,85 @@ questions.once('value', function(snapshot){
 });
 
 var QuestionSet = Backbone.Collection.extend({
-  initialize: function(){
+  compileTopics: function(){
+    this.forEach(function(model){
+      var tags = model.get('tags');
+      for (var i = 0; i < tags.length; i++){
+        if (!topics[tags[i]]) topics[tags[i]] = 1;
+        else topics[tags[i]] = topics[tags[i]] + 1;
+      }
+    }, this);
+  },
+  topics: {}
+});
 
+var TopicsView = Backbone.View.extend({
+  initialize: function(){
+    this.collection.compileTopics();
+    this.render();
+  },
+  events: {
+   'click': 'updateShowList'
+  },
+  updateShowList: function(){
+    //Could cause bugs -- could refactor to route this through overall app function...
+    var tags = this.$el.find('input:checkbox:checked').val();
+    questionSet.show = {};
+    for (var i = 0; i < tags.length; i++){
+      questionSet.show[tags[i]] = true;
+    }
+  },
+  tagName: 'form',
+  template: _.template('<label><%=name%> (<%=count%>)</label><input type = "checkbox" name = "options" value = "<%=name%>" checked = "true"></input>'),
+  render: function(){
+    var options = this.collection.topics;
+    for (var key in options){
+      this.$el.append(this.template({name: key, count: options[key]}));
+    }
+    this.updateShowList();
   }
 });
 
 var QuestionSetView = Backbone.View.extend({
   events: {
    'click button.next': 'nextQuestion',
-   'click button.dontknow' : 'dontKnow',
-   'click button.checkAnswer' : 'showAnswer'
+   'click button.dontKnow' : 'dontKnow',
+   'click button.showAnswer' : 'showAnswer'
   },
   nextQuestion: function(){
     this.currentCount++;
     this.$currentQuestion.children().detach();
     if (this.currentCount < this.questions.length) this.$currentQuestion.append(this.questions[this.currentCount].el);
-    else this.$currentQuestion.append('<div class = "complete">You\'re Done!</div>');
+    else this.$currentQuestion.append('<div class = "complete"><h1>You\'re Done!</h1></div>');
   },
   showAnswer: function(){
-    this.questions[this.currentCount].showAnswer();
+    this.questions[this.currentCount].toggleAnswer();
   },
   dontKnow: function(){
-    this.tostudy.push(this.currentCount);
-    this.showAnswer();
+    // Saving question model
+    var questionView = this.questions[this.currentCount];
+    if (questionView.dontKnow === true){
+      this.nextQuestion();
+    } else {
+     questionView.dontKnow = true;
+     questionView.toggleAnswer();
+     this.tostudy.push(this.questions[this.currentCount].model);
+    }
   },
   tostudy: [],
   questions: [],
   currentCount: 0,
-  template: _.template('<div class = "currentQuestion"></div><div class = "buttons"><button class = "btn btn-lg btn-danger dontknow">Don\'t know</button><button class = "btn btn-lg btn-success next">Got it</button></div>'),
+  template: _.template('<div class = "currentQuestion"></div><div class = "buttons">\
+                       <button class = "btn btn-lg btn-danger dontKnow">Don\'t know</button>\
+                       <button class = "showAnswer btn btn-lg btn-warning">Not sure?</button></button>\
+                       <button class = "btn btn-lg btn-success next">Got it</button></div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
     this.collection.forEach(function(model){
       var questionView = new QuestionView({model: model});
       this.questions.push(questionView);
+
     }, this);
     if (this.questions.length){
       this.$currentQuestion.append(this.questions[this.currentCount].el);
@@ -55,7 +100,6 @@ var QuestionSetView = Backbone.View.extend({
 
 var Question = Backbone.Model.extend({
   initialize: function(){
-    console.log(arguments);
   },
 });
 
@@ -63,13 +107,13 @@ var QuestionView = Backbone.View.extend({
   initialize: function(){
     this.render();
   },
-  template: _.template('<div class = "question"><%= questionText %></div><div class = "answer"><%= questionAnswer %></div>'),
+  template: _.template('<div class = "question"><h2>Question:</h2><%= questionText %></div><div class = "answer"><h2>Answer</h2><%= questionAnswer %></div>'),
   render: function(){
     this.$el.append(this.template(this.model.attributes));
     this.$el.find('.answer').hide();
   },
-  showAnswer: function(){
-    this.$el.find('.question').hide();
-    this.$el.find('.answer').show();
+  toggleAnswer: function(){
+    this.$el.find('.question').toggle();
+    this.$el.find('.answer').toggle();
   },
 });

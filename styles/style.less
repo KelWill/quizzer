@@ -1,0 +1,57 @@
+
+.buttons {
+  position: relative;
+}
+.buttons button {
+  width: 20%;
+}
+.dontKnow {
+  position: absolute;
+  left: 0px;
+}
+.showAnswer {
+  position: absolute;
+  left: 40%;
+}
+.next {
+  position: absolute;
+  right: 0;
+}
+
+
+div.currentQuestion {
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+}
+
+body {
+  background: #d3d3d3;
+  height: 100%;
+}
+
+.container {
+  background: #141414;
+  .border-radiuses(5px, 5xp, 5px, 5px);
+  height: 520px;
+}
+.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  -webkit-border-top-right-radius:    @topright;
+  -webkit-border-bottom-right-radius: @bottomright;
+  -webkit-border-bottom-left-radius:  @bottomleft;
+  -webkit-border-top-left-radius:     @topleft;
+
+  -moz-border-radius-topright:        @topright;
+  -moz-border-radius-bottomright:     @bottomright;
+  -moz-border-radius-bottomleft:      @bottomleft;
+  -moz-border-radius-topleft:         @topleft;
+
+  border-top-right-radius:            @topright;
+  border-bottom-right-radius:         @bottomright;
+  border-bottom-left-radius:          @bottomleft;
+  border-top-left-radius:             @topleft;
+
+  -moz-background-clip:    padding; 
+  -webkit-background-clip: padding-box; 
+   background-clip:         padding-box; 
+}
