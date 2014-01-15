@@ -1,0 +1,116 @@
+<html>
+<head>
+  <script src = 'http://code.jquery.com/jquery-1.10.2.min.js'></script>
+  <script src = 'http://cdn.firebase.com/v0/firebase.js'></script>
+  <script>
+    var firebase = new Firebase('https://quizzer.firebaseio.com/');
+    $(document).ready(function(){
+      var $questionArea = $('textarea.question');
+      var $questionAnswerArea = $('textarea.answer');
+      $('button.addQuestion').on('click', function(){
+        var question = $questionArea.val();
+        var answer = $questionAnswerArea.val();
+        var tags = [];
+        var checked = $('input:checkbox:checked');
+        for (var i = 0; i < checked.length; i++){
+          tags.push(checked[i].value);
+        }
+        firebase.push().set({questionText: question, questionAnswer: answer, tags: tags});
+        //clearing this out so it's easy to add another question
+        $questionArea.val('');
+        $questionAnswerArea.val('');
+      });
+    });
+  </script>
+  <style>
+    .container {
+      width: 90%;
+      margin-left: 5%;
+      margin-right: 5%;
+      font-family: helvetica, garamond, serif;
+      font-size: 1.2em;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 2%;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+      -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+      box-shadow: rgba(0,0,0,1) 0 1px 0;
+      text-shadow: rgba(0,0,0,.4) 0 1px 0;
+    }
+    textarea:focus {
+      padding: 5px;
+      outline: none !important;
+      border:1px solid blue;
+      box-shadow: 0 0 10px #719ECE;
+    }
+    .button {
+      border-top: 1px solid #96d1f8;
+      background: #65a9d7;
+      background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+      background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+      background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+      background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+      background: -o-linear-gradient(top, #3e779d, #65a9d7);
+      padding: 5px 10px;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+      -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+      box-shadow: rgba(0,0,0,1) 0 1px 0;
+      text-shadow: rgba(0,0,0,.4) 0 1px 0;
+      color: white;
+      font-size: 14px;
+      font-family: Georgia, serif;
+      text-decoration: none;
+      vertical-align: middle;
+    }
+    .button:hover {
+       border-top-color: #28597a;
+       background: #28597a;
+       color: #ccc;
+     }
+    .button:active {
+       border-top-color: #1b435e;
+       background: #1b435e;
+    }
+    .addQuestion {
+      float: right;
+    }
+    .tags {
+     float: left;
+     width: 70%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class = "container">
+    <textarea class = "question"></textarea>
+    <textarea class = "answer"></textarea>
+    <hr>
+    <div class = "options">
+      <button class = "addQuestion button">Add Question and Answer</button>
+      <span class = "tags">
+        <input type = "checkbox" name = "tag" value = "Javascript"></input><label>Javascript</label>
+        <input type = "checkbox" name = "tag" value = "CSS"></input><label>CSS</label>
+        <input type = "checkbox" name = "tag" value = "Algorithms"></input><label>Angular</label>
+        <input type = "checkbox" name = "tag" value = "Backbone"></input><label>Backbone</label>
+        <input type = "checkbox" name = "tag" value = "Angular"></input><label>Angular</label>
+        <input type = "checkbox" name = "tag" value = "Node"></input><label>Node</label>
+        <input type = "checkbox" name = "tag" value = "HTML"></input><label>HTML</label>
+        <input type = "checkbox" name = "tag" value = "Internet"></input><label>Internet</label>
+        <input type = "checkbox" name = "tag" value = "Toy Problem"></input><label>Toy Problems</label>
+        <input type = "checkbox" name = "tag" value = "General"></input><label>General</label>
+      </span>
+    </div>
+  </div>
+</body>
+
+</html>
