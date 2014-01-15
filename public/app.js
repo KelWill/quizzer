@@ -81,15 +81,14 @@ var QuestionSetView = Backbone.View.extend({
   dontKnow: function(){
     // Saving question model
     var questionView = this.questions[this.currentCount];
-    if (questionView.showingAnswer){
-      this.nextQuestion();
-    } else {
-     questionView.dontKnow = true;
-     questionView.toggleAnswer();
+    //adding it if it hasn't been added
+    if (!questionView.dontKnow) {
+      this.tostudy.push(this.questions[this.currentCount]);
+      questionView.dontKnow = true;
     }
-    if (!questionView.dontKnow) this.tostudy.push(this.questions[this.currentCount].model);
-    this.updateCount();
-  },
+    if (questionView.showingAnswer) this.nextQuestion();
+    else (this.showAnswer());
+},
   save: function(){
     var savedQuestions = new SavedQuestions({questions: this.tostudy});
     $('.container').append(savedQuestions.el);
