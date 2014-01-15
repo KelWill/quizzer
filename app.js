@@ -54,9 +54,11 @@ var QuestionSetView = Backbone.View.extend({
   events: {
    'click button.next': 'nextQuestion',
    'click button.dontKnow' : 'dontKnow',
-   'click button.showAnswer' : 'showAnswer'
+   'click button.showAnswer' : 'showAnswer',
+   'click button.save' : 'save'
   },
   nextQuestion: function(){
+    this.$el.find('button.showAnswer').show();
     this.currentCount++;
     this.$currentQuestion.children().detach();
     if (this.currentCount < this.questions.length) this.$currentQuestion.append(this.questions[this.currentCount].el);
@@ -64,6 +66,7 @@ var QuestionSetView = Backbone.View.extend({
   },
   showAnswer: function(){
     this.questions[this.currentCount].toggleAnswer();
+    this.$el.find('button.showAnswer').hide();
   },
   dontKnow: function(){
     // Saving question model
@@ -76,13 +79,19 @@ var QuestionSetView = Backbone.View.extend({
      this.tostudy.push(this.questions[this.currentCount].model);
     }
   },
+  save: function(){
+    var savedQuestions = new SavedQuestions({questions: this.tostudy});
+    debugger;
+    $('.container').append(savedQuestions.el);
+  },
   tostudy: [],
   questions: [],
   currentCount: 0,
   template: _.template('<div class = "currentQuestion"></div><div class = "buttons">\
-                       <button class = "btn btn-lg btn-danger dontKnow">Don\'t know</button>\
-                       <button class = "showAnswer btn btn-lg btn-warning">Not sure?</button></button>\
-                       <button class = "btn btn-lg btn-success next">Got it</button></div>'),
+                       <button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>\
+                       <button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>\
+                       <button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>\
+                       <div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
@@ -91,10 +100,37 @@ var QuestionSetView = Backbone.View.extend({
       this.questions.push(questionView);
 
     }, this);
+    //so you don't always see the same order
+    shuffle(this.questions);
     if (this.questions.length){
       this.$currentQuestion.append(this.questions[this.currentCount].el);
     }
     return this;
+  }
+});
+
+var SavedQuestions = Backbone.View.extend({
+  initialize: function(questions){
+    this.questions = questions.questions;
+    this.render();
+    return this;
+  },
+  events: {
+   'click button' : 'destroyThis'
+  },
+  destroyThis: function(){
+    this.$el.remove();
+  },
+  className: 'saved',
+  template: _.template('<div class = "question">Question: <%= questionText %></div><div class = "answer">Answer: <%= questionAnswer %></div><br><hr>'),
+  render: function(){
+    this.$el.append('<div class = "savedQuestions"></div>');
+    var $savedQuestions = this.$el.find(".savedQuestions");
+    if (!this.questions.length) this.$el.append('You haven\'t gotten any questions wrong, you genius you!');
+    for (var i = 0; i < this.questions.length; i++){
+      $savedQuestions.append(this.template(this.questions[i].attributes));
+    }
+    this.$el.append('<button class = "btn btn-block btn-primary done">Done</button>');
   }
 });
 
@@ -107,13 +143,33 @@ var QuestionView = Backbone.View.extend({
   initialize: function(){
     this.render();
   },
-  template: _.template('<div class = "question"><h2>Question:</h2><%= questionText %></div><div class = "answer"><h2>Answer</h2><%= questionAnswer %></div>'),
+  template: _.template('<div class = "question"><h2>Question</h2><%= questionText %></div><div class = "answer"><h2>Answer</h2><%= questionAnswer %></div>'),
   render: function(){
     this.$el.append(this.template(this.model.attributes));
     this.$el.find('.answer').hide();
   },
   toggleAnswer: function(){
-    this.$el.find('.question').toggle();
-    this.$el.find('.answer').toggle();
+    this.$el.find('.answer').show();
   },
 });
+
+function shuffle(array) {
+    var currentIndex = array.length;
+    var temporaryValue;
+    var randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  }
