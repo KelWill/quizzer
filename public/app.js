@@ -4,6 +4,8 @@ questions.once('value', function(snapshot){
   var questions = snapshot.val();
   var questionSet = new QuestionSet();
   for (var key in questions){
+    questions[key].questionText = questions[key].questionText.replace(/\n/g, '<br>');
+    questions[key].questionAnswer = questions[key].questionAnswer.replace(/\n/g, '<br>');
     questionSet.add(new Question(questions[key]));
   }
   var questionSetView = new QuestionSetView({collection: questionSet});
@@ -59,11 +61,12 @@ var QuestionSetView = Backbone.View.extend({
   },
   nextQuestion: function(){
     this.$el.find('button.showAnswer').show();
-    this.currentCount++;
-    this.$currentQuestion.children().detach();
-    this.updateCount();
-    if (this.currentCount < this.questions.length) this.$currentQuestion.append(this.questions[this.currentCount].el);
-    else {
+    if (this.currentCount < this.questions.length){
+      this.currentCount++;
+      this.updateCount();
+      this.$currentQuestion.children().detach();
+      this.$currentQuestion.append(this.questions[this.currentCount].el);
+    } else {
       var message = '<div class = "complete"><h1>You\'re Done!</h1><span>You should probably review ' + this.tostudy.length +
       ' of ' + this.questions.length + ' total questions. Click \"Get Saved Questions\" below to get the questions you marked to review</span></div>';
       this.$currentQuestion.append(message);
@@ -120,7 +123,7 @@ var QuestionSetView = Backbone.View.extend({
     return this;
   },
   updateCount: function(){
-    thiss.$countDone.text(this.currentCount + 1);
+    this.$countDone.text(this.currentCount + 1);
   }
 });
 
