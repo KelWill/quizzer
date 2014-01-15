@@ -65,55 +65,47 @@ var QuestionSetView = Backbone.View.extend({
     else this.$currentQuestion.append('<div class = "complete"><h1>You\'re Done!</h1></div>');
   },
   showAnswer: function(){
-    var questionView = this.questions[this.currentCount];
-    questionView.toggleAnswer();
-    questionView.showingANswer = true;
+    this.questions[this.currentCount].toggleAnswer();
     this.$el.find('button.showAnswer').hide();
   },
   dontKnow: function(){
     // Saving question model
     var questionView = this.questions[this.currentCount];
-    if (questionView.showingAnswer){
-      if (!questionView.dontKnow) this.tostudy.push(this.questions[this.currentCount].model);
+    if (questionView.dontKnow === true){
       this.nextQuestion();
     } else {
      questionView.dontKnow = true;
-     this.tostudy.push(this.questions[this.currentCount].model);
      questionView.toggleAnswer();
+     this.tostudy.push(this.questions[this.currentCount].model);
     }
   },
   save: function(){
     var savedQuestions = new SavedQuestions({questions: this.tostudy});
+    debugger;
     $('.container').append(savedQuestions.el);
   },
   tostudy: [],
   questions: [],
   currentCount: 0,
-  template: _.template('<div class = "count">0</div><div class = "total"></div>' +
-                       '<div class = "currentQuestion"></div><div class = "buttons">' +
-                       '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>' +
-                       '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>' +
-                       '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>' +
-                       '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
+  template: _.template('<div class = "currentQuestion"></div><div class = "buttons">\
+                       <button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>\
+                       <button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>\
+                       <button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>\
+                       <div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
     this.collection.forEach(function(model){
       var questionView = new QuestionView({model: model});
       this.questions.push(questionView);
+
     }, this);
     //so you don't always see the same order
     shuffle(this.questions);
     if (this.questions.length){
       this.$currentQuestion.append(this.questions[this.currentCount].el);
     }
-    this.$countDone = this.$el.find('.count');
-    this.updateCount();
-    this.$el.find('.total').text(this.questions.length);
     return this;
-  },
-  updateCount: function(){
-    this.$countDone.text(currentCount + 1);
   }
 });
 
