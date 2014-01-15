@@ -22,13 +22,6 @@
   right: 0;
   bottom: 0px;
 }
-.complete h1{
-  position: absolute;
-  height: 20%;
-  width: 100%;
-  top: 40%;
-  margin: auto;
-}
 .save {
   position: absolute;
   top: 550px;
@@ -46,6 +39,20 @@ div.currentQuestion {
   position: relative;
 }
 
+.counts {
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  color: lightgrey;
+}
+
+.complete {
+  position: absolute;
+  height: 20%;
+  width: 80%;
+  top: 30%;
+  left: 10%;
+}
 .saved {
   z-index: 1;
   position: absolute;

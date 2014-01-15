@@ -59,33 +59,30 @@ var QuestionSetView = Backbone.View.extend({
   },
   nextQuestion: function(){
     this.$el.find('button.showAnswer').show();
-    this.currentCount++;
-    this.$currentQuestion.children().detach();
-    this.updateCount();
-    if (this.currentCount < this.questions.length) this.$currentQuestion.append(this.questions[this.currentCount].el);
-    else {
-      var message = '<div class = "complete"><h1>You\'re Done!</h1><span>You should probably review ' + this.tostudy.length +
-      ' of ' + this.questions.length + ' total questions. Click \"Get Saved Questions\" below to get the questions you marked to review</span></div>';
-      this.$currentQuestion.append(message);
+    if (this.currentCount < this.questions.length){
+      this.currentCount++;
+      this.$currentQuestion.children().detach();
+      this.$currentQuestion.append(this.questions[this.currentCount].el);
     }
+    else this.$currentQuestion.append('<div class = "complete"><h1>You\'re Done!</h1></div>');
   },
   showAnswer: function(){
     var questionView = this.questions[this.currentCount];
     questionView.toggleAnswer();
-    questionView.showingAnswer = true;
+    questionView.showingANswer = true;
     this.$el.find('button.showAnswer').hide();
   },
   dontKnow: function(){
     // Saving question model
     var questionView = this.questions[this.currentCount];
     if (questionView.showingAnswer){
+      if (!questionView.dontKnow) this.tostudy.push(this.questions[this.currentCount].model);
       this.nextQuestion();
     } else {
      questionView.dontKnow = true;
+     this.tostudy.push(this.questions[this.currentCount].model);
      questionView.toggleAnswer();
     }
-    if (!questionView.dontKnow) this.tostudy.push(this.questions[this.currentCount].model);
-    this.updateCount();
   },
   save: function(){
     var savedQuestions = new SavedQuestions({questions: this.tostudy});
@@ -94,33 +91,31 @@ var QuestionSetView = Backbone.View.extend({
   tostudy: [],
   questions: [],
   currentCount: 0,
-  template: _.template('<div class = "counts"><span class = "countDone"></span><span class = "countTotal"></span></div>' +
+  template: _.template('<div class = "count">0</div><div class = "total"></div>' +
                        '<div class = "currentQuestion"></div><div class = "buttons">' +
                        '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>' +
                        '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>' +
                        '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>' +
-                       '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get Saved Questions</div>'),
+                       '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
     this.collection.forEach(function(model){
       var questionView = new QuestionView({model: model});
       this.questions.push(questionView);
-
     }, this);
     //so you don't always see the same order
     shuffle(this.questions);
     if (this.questions.length){
       this.$currentQuestion.append(this.questions[this.currentCount].el);
     }
-    $counts = this.$el.find('.counts');
-    $counts.find('.countTotal').text(this.questions.length);
-    this.$countDone = $counts.find('.countDone');
+    this.$countDone = this.$el.find('.count');
     this.updateCount();
+    this.$el.find('.total').text(this.questions.length);
     return this;
   },
   updateCount: function(){
-    thiss.$countDone.text(this.currentCount + 1);
+    this.$countDone.text(this.currentCount + 1);
   }
 });
 
@@ -137,7 +132,7 @@ var SavedQuestions = Backbone.View.extend({
     this.$el.remove();
   },
   className: 'saved',
-  template: _.template('<div class = "question">Question: <%= questionText %></div><div class = "answer">Answer: <%= questionAnswer %></div><br><hr>'),
+  template: _.template('<div class = "question"><p>Question: <%= questionText %></p></div><div class = "answer"><p>Answer: <%= questionAnswer %></p></div><br><hr>'),
   render: function(){
     this.$el.append('<div class = "savedQuestions"></div>');
     var $savedQuestions = this.$el.find(".savedQuestions");
@@ -150,7 +145,9 @@ var SavedQuestions = Backbone.View.extend({
 });
 
 var Question = Backbone.Model.extend({
-  initialize: function(){
+  initialize: function(args){
+    this.set('questionText', args.questionText.replace(/\n/g, '<br>'));
+    this.set('questionAnswer', args.questionAnswer.replace(/\n/g, '<br>'));
   },
 });
 
@@ -158,7 +155,7 @@ var QuestionView = Backbone.View.extend({
   initialize: function(){
     this.render();
   },
-  template: _.template('<div class = "question"><h2>Question</h2><%= questionText %></div><div class = "answer"><h2>Answer</h2><%= questionAnswer %></div>'),
+  template: _.template('<div class = "question"><h2>Question</h2><p><%= questionText %></p></div><div class = "answer"><h2>Answer</h2><p><%= questionAnswer %></p></div>'),
   render: function(){
     this.$el.append(this.template(this.model.attributes));
     this.$el.find('.answer').hide();
