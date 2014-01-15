@@ -24,7 +24,7 @@ var QuestionSetView = Backbone.View.extend({
   },
   nextQuestion: function(){
     this.currentCount++;
-    this.$currentQuestion.detach();
+    this.$currentQuestion.children().detach();
     if (this.currentCount < this.questions.length) this.$currentQuestion.append(this.questions[this.currentCount].el);
     else this.$currentQuestion.append('<div class = "complete">You\'re Done!</div>');
   },
@@ -32,14 +32,13 @@ var QuestionSetView = Backbone.View.extend({
     this.questions[this.currentCount].showAnswer();
   },
   dontKnow: function(){
-    debugger;
     this.tostudy.push(this.currentCount);
     this.showAnswer();
   },
-  toStudy: [],
+  tostudy: [],
   questions: [],
   currentCount: 0,
-  template: _.template('<div class = "currentQuestion"></div><div class = "buttons"><button class = "btn btn-lg btn-danger donttknow">Don\'t know</button><button class = "btn btn-lg btn-success next">Got it</button></div>'),
+  template: _.template('<div class = "currentQuestion"></div><div class = "buttons"><button class = "btn btn-lg btn-danger dontknow">Don\'t know</button><button class = "btn btn-lg btn-success next">Got it</button></div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
