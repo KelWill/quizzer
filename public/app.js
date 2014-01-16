@@ -60,13 +60,15 @@ var QuestionSetView = Backbone.View.extend({
    'click button.save' : 'save'
   },
   nextQuestion: function(){
-    this.$el.find('button.showAnswer').show();
-    if (this.currentCount < this.questions.length){
+    this.$currentQuestion.children().detach();
+    this.$showAnswer.show();
+    this.$dontKnow.show();
+    if (this.currentCount < this.questions.length - 1){
       this.currentCount++;
       this.updateCount();
-      this.$currentQuestion.children().detach();
       this.$currentQuestion.append(this.questions[this.currentCount].el);
     } else {
+      this.$el.find('.buttons').hide();
       var message = '<div class = "complete"><h1>You\'re Done!</h1><span>You should probably review ' + this.tostudy.length +
       ' of ' + this.questions.length + ' total questions. Click \"Get Saved Questions\" below to get the questions you marked to review</span></div>';
       this.$currentQuestion.append(message);
@@ -76,7 +78,7 @@ var QuestionSetView = Backbone.View.extend({
     var questionView = this.questions[this.currentCount];
     questionView.toggleAnswer();
     questionView.showingAnswer = true;
-    this.$el.find('button.showAnswer').hide();
+    this.$showAnswer.hide();
   },
   dontKnow: function(){
     // Saving question model
@@ -84,6 +86,7 @@ var QuestionSetView = Backbone.View.extend({
     //adding it if it hasn't been added
     if (!questionView.dontKnow) {
       this.tostudy.push(this.questions[this.currentCount].model);
+      this.$dontKnow.hide();
       questionView.dontKnow = true;
     }
     if (questionView.showingAnswer) this.nextQuestion();
@@ -99,7 +102,7 @@ var QuestionSetView = Backbone.View.extend({
   template: _.template('<div class = "counts"><span class = "countDone"></span> / <span class = "countTotal"></span></div>' +
                        '<div class = "currentQuestion"></div><div class = "buttons">' +
                        '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>' +
-                       '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-ok"></span> Check Answer </button></button>' +
+                       '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-question-sign"></span> Check Answer </button></button>' +
                        '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>' +
                        '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get Saved Questions</div>'),
   render: function(){
@@ -118,6 +121,9 @@ var QuestionSetView = Backbone.View.extend({
     $counts = this.$el.find('.counts');
     $counts.find('.countTotal').text(this.questions.length);
     this.$countDone = $counts.find('.countDone');
+
+    this.$showAnswer = this.$el.find('.showAnswer');
+    this.$dontKnow = this.$el.find('.dontKnow');
     this.updateCount();
     return this;
   },
