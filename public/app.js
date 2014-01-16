@@ -59,6 +59,7 @@ var QuestionSetView = Backbone.View.extend({
    'click button.showAnswer' : 'showAnswer',
    'click button.save' : 'save'
   },
+  className: "height100",
   nextQuestion: function(){
     this.$currentQuestion.children().detach();
     this.$showAnswer.show();
@@ -167,6 +168,7 @@ var QuestionView = Backbone.View.extend({
   initialize: function(){
     this.render();
   },
+  className: "height80",
   template: _.template('<div class = "question"><h2>Question</h2><p><%= questionText %></p></div><div class = "answer"><h2>Answer</h2><p><%= questionAnswer %></p></div>'),
   render: function(){
     this.$el.append(this.template(this.model.attributes));

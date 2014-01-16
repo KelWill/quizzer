@@ -4,6 +4,11 @@
   bottom: 30px;
   width: 100%;
 }
+
+.height100 {
+  height: 100%;
+}
+
 .buttons button {
   width: 30%;
 }
@@ -45,9 +50,15 @@
 
 /*  CSS for main questions  */
 div.currentQuestion {
+  height: 100%;
   margin-top: 20px;
   color: white;
 }
+div.height80 {
+  height: 60%;
+  overflow: auto;
+}
+
 div.currentQuestion .question{
   width: 60%;
   margin: auto;
