@@ -97,9 +97,8 @@ div.currentQuestion .answer {
   overflow-y: auto;
 }
 .saved div {
-  margin-left: 20px;
   margin-right: 20px;
-}
+} 
 
 
 /*  Container and Background  */
@@ -122,5 +121,20 @@ body {
   font-size: 1.5em;
 }
 
+.starMe {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
 
-/*  Media Queries  */
+@media (max-width: 600px) {
+  .hideme {
+    display: none;
+  }
+}
+
+@media (max-height: 640px){
+  .starMe {
+    display: none;
+  }
+}

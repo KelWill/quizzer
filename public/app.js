@@ -101,9 +101,9 @@ var QuestionSetView = Backbone.View.extend({
   currentCount: 0,
   template: _.template('<div class = "counts"><span class = "countDone"></span> / <span class = "countTotal"></span></div>' +
                        '<div class = "currentQuestion"></div><div class = "buttons">' +
-                       '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span> Don\'t know</button>' +
-                       '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-question-sign"></span> Check Answer </button></button>' +
-                       '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> Next</button></div>' +
+                       '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span><span class = "hideme"> Don\'t know</span></button>' +
+                       '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-question-sign"></span><span class = "hideme"> Check Answer</span></button></button>' +
+                       '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> <span class = "hideme">Next</span></button></div>' +
                        '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
   render: function(){
     this.$el.append(this.template({}));
