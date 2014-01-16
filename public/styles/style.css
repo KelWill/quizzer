@@ -147,7 +147,17 @@ body {
     width: 100%;
     margin: 0;
   }
+  .counts {
+    text-align: right;
+    margin-top: -10%;
+  }
 }
+@media (max-width: 249px){
+  .counts {
+    display: none; 
+  }
+}
+
 
 @media (max-height: 640px){
   .starMe {
