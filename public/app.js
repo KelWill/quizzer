@@ -95,7 +95,7 @@ var QuestionSetView = Backbone.View.extend({
   },
   save: function(){
     var savedQuestions = new SavedQuestions({questions: this.tostudy});
-    $('.container').append(savedQuestions.el);
+    $('.mySavedQuestions').append(savedQuestions.el);
   },
   tostudy: [],
   questions: [],
@@ -104,7 +104,7 @@ var QuestionSetView = Backbone.View.extend({
                        '<div class = "currentQuestion"></div><div class = "buttons">' +
                        '<button class = "btn btn-lg btn-danger dontKnow"><span class = "glyphicon glyphicon-floppy-disk"></span><span class = "hideme"> Don\'t know</span></button>' + '<button class = "showAnswer btn btn-lg btn-primary"><span class = "glyphicon glyphicon-question-sign"></span><span class = "hideme"> Check Answer</span></button></button>' +
                        '<button class = "btn btn-lg btn-success next"><span class = "glyphicon glyphicon-play"></span> <span class = "hideme">Next</span></button></div>' +
-                       '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get failed questions</div>'),
+                       '<div class = "saveSection"><hr><button class = "btn btn-block btn-info save"><span class = "glyphicon glyphicon-save"></span> Get saved questions</div>'),
   render: function(){
     this.$el.append(this.template({}));
     this.$currentQuestion = this.$el.find('.currentQuestion');
