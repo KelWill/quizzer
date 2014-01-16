@@ -47,8 +47,6 @@
 div.currentQuestion {
   margin-top: 20px;
   color: white;
-  height: 70%;
-  overflow-y: auto;
 }
 div.currentQuestion .question{
   width: 60%;
@@ -145,11 +143,6 @@ body {
   .hideme {
     display: none;
   }
-}
-@media (max-width: 760px) {
-  .hideme {
-    display: none;
-  }
   .container {
     width: 100%;
     margin: 0;
@@ -159,5 +152,18 @@ body {
 @media (max-height: 640px){
   .starMe {
     display: none;
+  }
+  .container {
+    height: 90%;
+  }
+  div.currentQuestion .question{
+    width: 80%;
+    margin: auto;
+    text-align: left;
+  }
+  div.currentQuestion .answer {
+    text-align: left;
+    width: 80%;
+    margin: auto;
   }
 }
