@@ -7,6 +7,7 @@
 .buttons button {
   width: 30%;
 }
+
 .dontKnow {
   position: absolute;
   left: 0px;
@@ -22,6 +23,19 @@
   right: 0;
   bottom: 0px;
 }
+.complete {
+  position: absolute;
+  height: 20%;
+  width: 100%;
+  top: 40%;
+  margin: auto;
+}
+.counts {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: lightgrey;
+}
 .save {
   position: absolute;
   top: 550px;
@@ -31,8 +45,19 @@
 /*  CSS for main questions  */
 div.currentQuestion {
   margin-top: 20px;
-  text-align: center;
   color: white;
+}
+
+div.currentQuestion .question{
+  width: 60%;
+  margin: auto;
+  text-align: left;
+}
+
+div.currentQuestion .answer {
+  text-align: left;
+  width: 60%;
+  margin: auto;
 }
 .questions {
   height: 520px;
